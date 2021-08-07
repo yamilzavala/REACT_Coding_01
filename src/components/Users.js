@@ -99,6 +99,13 @@ const Users = () => {
         return rows.filter((currentLocation) => JSON.stringify(currentLocation).toLocaleLowerCase().includes(filterText))
     }
 
+    function filterObjectValues(rows, filterText){
+        return rows.filter((currentLocation) => {
+                return Object.values(currentLocation).some(s => (''+s).toLocaleLowerCase().includes(filterText))
+            }
+        )
+    }
+
   
 
     return(
@@ -115,7 +122,7 @@ const Users = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {filterStringify(locationsData, filterStringifyData).map(location => 
+                    {filterObjectValues(locationsData, filterStringifyData).map(location => 
                                 <tr key={uuidv4()}>                       
                                     <td >{location.city}</td>
                                     <td >{location.description}</td>
