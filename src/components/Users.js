@@ -13,8 +13,8 @@ const fieldsName = {
 const Users = () => {
     const [locationsData, setLocationsData] = useState([]);
     const [sorting, setSorting] = useState(false);
-    const [sortingNumber, setSortingNumber] = useState(false);
-    const [filterLocations, setFilterLocations] = useState([]);
+    const [sortingNumber, setSortingNumber] = useState(false);    
+    const [filterStringifyData, setFilterStringify] = useState('');
     
     const fetchUsers = () => {
         return axios.get(`https://randomuser.me/api/?results=20`)
@@ -95,21 +95,16 @@ const Users = () => {
     }
 
     //filter
-     function handleFilter(e) {                
-        if (e.target.value !== undefined) {
-            const dataFiltered = locationsData.filter(currentLocation => currentLocation.city.toLowerCase() ===  e.target.value.toLowerCase()); 
-            setFilterLocations(dataFiltered)               
-        } else {
-            setFilterLocations([])
-        }             
+    function filterStringify(rows, filterText){
+        return rows.filter((currentLocation) => JSON.stringify(currentLocation).toLocaleLowerCase().includes(filterText))
     }
 
   
 
     return(
         <div>
-            <h6>Locations</h6>   
-            <input placeholder="Enter a text to filter" type="text" onChange={(e) => handleFilter(e)}/>
+            <h6>Locations</h6>              
+            <input placeholder="Enter a text to filter" type="text" onChange={(e) => setFilterStringify(e.target.value)}/>
             <table>
                 <thead>
                     <tr>
@@ -120,26 +115,14 @@ const Users = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {
-                        (filterLocations.length) ? 
-                            filterLocations.map(location => 
+                    {filterStringify(locationsData, filterStringifyData).map(location => 
                                 <tr key={uuidv4()}>                       
                                     <td >{location.city}</td>
                                     <td >{location.description}</td>
                                     <td>{location.name}</td>
                                     <td>{location.number}</td>
                                 </tr>       
-                            )
-                        :
-                            locationsData.map(location => 
-                                <tr key={uuidv4()}>                       
-                                    <td >{location.city}</td>
-                                    <td >{location.description}</td>
-                                    <td>{location.name}</td>
-                                    <td>{location.number}</td>
-                                </tr>       
-                            )
-                    }                    
+                            )}
                 </tbody>               
             </table>            
         </div>
